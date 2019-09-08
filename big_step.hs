@@ -23,9 +23,9 @@ data Command = Skip
 safeDiv :: Exp -> Exp -> Memory -> Maybe Integer
 safeDiv _ (Const 0) _ = Nothing
 safeDiv a b m = do
-            x <- eval a m
-            y <- eval b m 
-            return $ quot x y
+  x <- eval a m
+  y <- eval b m 
+  return $ quot x y
 
 add :: Exp -> Exp -> Memory -> Maybe Integer
 add a b m = do
@@ -53,7 +53,7 @@ evalBool FALSE _       = FALSE
 evalBool (And e1 e2) m = andBool e1 e2 m
 evalBool (GTT e1 e2) m = greaterThan e1 e2 m
 
-atrib :: String -> Exp -> Memory -> Maybe Memory 
+atrib :: Identifier -> Exp -> Memory -> Maybe Memory 
 atrib id exp m = do
   result <- eval exp m
   Just $ Map.insert id result m
@@ -80,5 +80,6 @@ main = do
     run (
       If (GTT (Const 11) $ Id "zero") 
         (Atrib "true" $ Const 1) 
-        (Atrib "false" $ Const 0)) 
-        memory
+        (Atrib "false" $ Const 0)
+    ) 
+    memory
