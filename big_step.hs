@@ -1,41 +1,51 @@
-import Control.Monad
-import Data.List.Split
-import System.IO
+import qualified Data.Map as Map
 
-import qualified Data.Map.Strict as Map
+type Id = String
+type Memory = Map.Map String Integer
 
-data Binary = Add 
-  | Sub 
-  | Div 
-  | Mult deriving (Show, Eq)
+data Exp = Const Integer 
+    | Id
+    | Add Exp Exp
+    | Div Exp Exp deriving (Show, Eq)
 
-data Command = (Atrib a b) | Skip deriving (Show)
-
-data Instruction = CommandOp Command
-  | BinaryOp Binary deriving (Show)
-
-emptyMemory :: Memory
-emptyMemory = Memory []
-
-setMemory ::  Integer -> Integer -> Memory -> Memory
+data Command = Skip
+    | Atrib Id Exp
+    | Seq Command Command deriving (Show, Eq)
 
 
+safeDiv :: Exp -> Exp -> Maybe Integer
+safeDiv _ (Const 0) = Nothing
+safeDiv a b = do
+            x <- eval a
+            y <- eval b
+            return $ quot x y
 
-binaryOp :: Binary -> Integer -> Integer -> Integer
-binaryOp Add = (+) 
-binaryOp Sub = (-)
-binaryOp Div = quot 
-binaryOp Mult = (*)
+add :: Exp -> Exp -> Maybe Integer
+add a b = do
+    x <- eval a
+    y <- eval b
+    return $ x + y
 
-commandOp :: Command -> Memory -> Memory
-commandOp (Atrib a b) (Memory m) = 
+eval :: Exp -> Maybe Integer
+eval (Const a) = return a
+eval (Div a b) = safeDiv a b
+eval (Add a b) = add a b
 
-step :: Instruction -> Memory -> Memory
+atrib :: String -> Exp -> Memory -> Maybe Memory 
+atrib id exp m = do
+    result <- eval exp
+    Just $ Map.insert id result m
 
+seqCommand :: Command -> Command -> Memory -> Maybe Memory
+seqCommand c1 c2 m = do
+    m' <- run c1 m
+    run c2 m'
 
-run :: [Instruction] -> Memory -> Memory
-run [] (Memory a) = Memory a
-
+run :: Command -> Memory -> Maybe Memory
+run Skip m           = Just m
+run (Atrib id exp) m = atrib id exp m
+run (Seq c1 c2) m    = seqCommand c1 c2 m 
 
 main = do
-  print "Nothing to do"
+    let memory = Map.fromList [("zero", 0)]
+    print $ run (Seq (Atrib "teste" $ Const 1) $ Atrib "teste2" (Const 2)) memory
