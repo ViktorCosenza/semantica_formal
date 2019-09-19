@@ -1,10 +1,15 @@
 
-data Tree = Empty | Node a (Tree a) (Tree a) deriving (Show, Eq)
+data Tree = Empty | Node Int Tree Tree deriving (Show, Eq)
 
-insert :: a -> Tree a -> Tree a
-insert a Empty = Node a (Tree Empty) (Tree Empty)
-insert a Node b  (Tree left) (Tree right)
-    | a > b = insert a $ Tree left
-    | a < b = insert a $ Tree right
-    | otherwise = Tree Node b
-    
+insereTree :: Int -> Tree -> Tree
+insereTree num Empty = Node num Empty Empty
+insereTree num (Node n left right) 
+  | num > n   = Node n left  $ insereTree num right
+  | num < n   = Node n right $ insereTree num left
+  | otherwise = Node n left right
+
+multTree :: Int -> Tree -> Tree
+multTree _ Empty                   = Empty
+multTree m (Node num left right)   = (Node $ (*) m num) (multTree m left) (multTree m right)
+
+
