@@ -6,11 +6,10 @@ import Types
 import qualified Data.Map as Map
 
 main = do
-  let memory = Map.fromList [("zero", 11)]
+  let memory = Map.fromList [("zero", 0)]
   print $ 
     run (
-      If (GTT (Const 11) $ Id "zero") 
-        (Atrib "true" $ Const 1) 
-        (Atrib "false" $ Const 0)
+      While (GTT (Const 11) $ Id "zero") 
+        (Atrib "zero" $ Add (Const 1) (Id "zero")) 
     ) 
     memory

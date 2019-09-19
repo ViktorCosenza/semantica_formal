@@ -53,8 +53,14 @@ ifThenElse TRUE c _  m = run c m
 ifThenElse FALSE _ c m = run c m 
 ifThenElse exp c1 c2 m = ifThenElse (evalBool exp m) c1 c2 m 
 
+while :: BooleanExp -> Command -> Memory -> Maybe Memory
+while b c m
+  | evalBool b m == TRUE = run (Seq c $ While b c) m 
+  | otherwise            = Just m
+
 run :: Command -> Memory -> Maybe Memory
 run Skip m            = Just m
 run (Atrib id exp) m  = atrib id exp m
 run (If b c1 c2) m    = ifThenElse b c1 c2 m
+run (While b c) m     = while b c m
 run (Seq c1 c2) m     = seqCommand c1 c2 m 

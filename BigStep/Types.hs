@@ -19,4 +19,5 @@ data BooleanExp = TRUE
 data Command = Skip
   | Atrib Identifier Exp
   | If BooleanExp Command Command 
-  | Seq Command Command deriving (Show, Eq) 
+  | Seq Command Command
+  | While BooleanExp Command deriving (Show, Eq) 
