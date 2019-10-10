@@ -32,10 +32,16 @@ andBool b1 b2 m   = andBool (evalBool b1 m) b2 m
 greaterThan :: Exp -> Exp -> Memory -> BooleanExp
 greaterThan e1 e2 m = if (>) (eval e1 m) $ eval e2 m then TRUE else FALSE
 
-evalBool :: BooleanExp -> Memory ->BooleanExp
+notBool :: BooleanExp -> BooleanExp
+notBool TRUE  = FALSE
+notBool FALSE = TRUE
+
+evalBool :: BooleanExp -> Memory -> BooleanExp
 evalBool TRUE _        = TRUE
 evalBool FALSE _       = FALSE
+evalBool (Not e1) m    = notBool (evalBool e1 m)
 evalBool (And e1 e2) m = andBool e1 e2 m
+evalBool (Or e1 e2) m  = notBool $ andBool (notBool (evalBool e1 m)) (notBool (evalBool e2 m)) m
 evalBool (GTT e1 e2) m = greaterThan e1 e2 m
 
 atrib :: Identifier -> Exp -> Memory -> Maybe Memory 

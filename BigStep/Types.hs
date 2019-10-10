@@ -13,7 +13,9 @@ data Exp = Const Integer
   
 data BooleanExp = TRUE
   | FALSE
-  | And BooleanExp BooleanExp 
+  | Not BooleanExp
+  | And BooleanExp BooleanExp
+  | Or BooleanExp BooleanExp 
   | GTT Exp Exp deriving (Show, Eq)
 
 data Command = Skip
