@@ -3,28 +3,28 @@ where
 
 import qualified Data.Map as Map
 
-type Memory = Map.Map String Integer
-type Identifier = String
+type Memory = Map.Map String Int
 
+data AExp = Num Int
+    | Var String
+    | Som AExp AExp
+    | Sub AExp AExp
+    | Mul AExp AExp
+  deriving (Show, Eq)
 
-data Exp = Const Integer 
-  | Id Identifier
-  | Add Exp Exp
-  | Sub Exp Exp
-  | Mult Exp Exp
-  | Div Exp Exp deriving (Show, Eq)
-  
-data BooleanExp = TRUE
-  | FALSE
-  | Not BooleanExp
-  | And BooleanExp BooleanExp
-  | Or BooleanExp BooleanExp 
-  | LEQ Exp Exp deriving (Show, Eq)
+data BExp = TRUE
+     | FALSE
+     | Not BExp
+     | And BExp BExp
+     | Or  BExp BExp
+     | Ig  AExp AExp
+   deriving (Show, Eq)
 
-data Command = Skip
-  | Atrib Identifier Exp
-  | If BooleanExp Command Command 
-  | Seq Command Command
-  | While BooleanExp Command deriving (Show, Eq) 
+data CExp = While BExp CExp
+     | If BExp CExp CExp
+     | Seq CExp CExp
+     | Atrib AExp AExp
+     | Skip
+   deriving (Show, Eq)   
 
-type Program = Command
+type Program = CExp
