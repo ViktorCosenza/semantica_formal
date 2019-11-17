@@ -5,11 +5,10 @@ import Types
 import qualified Data.Map as Map
                             
 stepAExp :: AExp -> Memory -> AExp
-stepAExp (Num c) _ = Num c
-stepAExp (Var v) m =  Num $ Map.findWithDefault (-1) v m
-stepAExp (Som a b) m = stepSom (Som a b) m
-stepAExp (Sub a b) m = stepSub (Sub a b) m
-stepAExp (Mul a b) m = stepMul (Mul a b) m
+stepAExp (Var v) =  Num . Map.findWithDefault (-1) v
+stepAExp (Som a b) = stepSom (Som a b)
+stepAExp (Sub a b) = stepSub (Sub a b)
+stepAExp (Mul a b) = stepMul (Mul a b)
 
 
 stepSom :: AExp -> Memory -> AExp 

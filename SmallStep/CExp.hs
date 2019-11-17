@@ -8,10 +8,10 @@ import qualified Data.Map as Map
 
 
 stepCExp :: CExp -> Memory -> (CExp, Memory)
-stepCExp (Atrib id e) m = stepAtrib (Atrib id e) m
-stepCExp (If b c1 c2) m = stepIf (If b c1 c2) m
-stepCExp (Seq c1 c2) m = stepSeq (Seq c1 c2) m 
-stepCExp (While b c1) m = stepWhile (While b c1) m
+stepCExp (Atrib id e) = stepAtrib (Atrib id e)
+stepCExp (If b c1 c2) = stepIf (If b c1 c2)
+stepCExp (Seq c1 c2) = stepSeq (Seq c1 c2) 
+stepCExp (While b c1) = stepWhile (While b c1)
 
 insert :: AExp -> Memory -> AExp -> Memory
 insert (Var id) m (Num c) = Map.insert id c m
